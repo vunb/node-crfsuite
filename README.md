@@ -18,4 +18,4 @@ Using npm:
 
 Pull requests and stars are highly welcome.
 
-For bugs and feature requests, please [create an issue](https://github.com/bertmsk/node-crfsuite/issues/new).
+For bugs and feature requests, please [create an issue](https://github.com/vunb/node-crfsuite/issues/new).
