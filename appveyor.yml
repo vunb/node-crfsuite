@@ -5,7 +5,9 @@ environment:
 
   matrix:
   - nodejs_version: "4"
+  - nodejs_version: "5"
   - nodejs_version: "6"
+  - nodejs_version: "7"
   - nodejs_version: "8"
   
 platform:
@@ -22,7 +24,7 @@ install:
   # install modules
   - npm install -g node-gyp node-pre-gyp node-pre-gyp-github
   - npm install
-  - ps: if($env:APPVEYOR_REPO_COMMIT_MESSAGE.ToLower().Contains('[appveyor publish binary]')) { node-pre-gyp package; node-pre-gyp-github publish --release }
+  - ps: if($env:APPVEYOR_REPO_COMMIT_MESSAGE.ToLower().Contains('[publish binary]')) { node-pre-gyp package; node-pre-gyp-github publish --release }
 
 # Post-install test scripts.
 test_script:

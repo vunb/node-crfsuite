@@ -10,8 +10,7 @@
     "postinstall": "node-pre-gyp install --fallback-to-build",
     "test": "tape test/start.js | tap-spec",
     "buildtest": "set PYTHON=C:\\Users\\nhuba\\.windows-build-tools\\python27\\python.exe&& npm run config && npm run build && npm test",
-    "publish-appveyor": "git commit --allow-empty -m '[appveyor publish binary]' && git push origin",
-    "publish-travis": "git commit --allow-empty -m '[travis publish binary]' && git push origin"
+    "publish-binary": "git commit --allow-empty -m '[publish binary]' && git push origin"
   },
   "repository": {
     "type": "git",
