@@ -1,5 +1,9 @@
 language: node_js
 
+os:
+- linux
+- osx
+
 env:
   global:
     - CXX=g++-4.8
@@ -29,5 +33,6 @@ before_script:
 - COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
 
 script:
+- npm test
 - if [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]; then node-pre-gyp package && node-pre-gyp-github
   publish --release; fi;
