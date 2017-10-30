@@ -17,6 +17,8 @@ install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version $env:platform
   - set PATH=%APPDATA%\npm;%PATH%
+  # install submodules
+  - git submodule update --init
   # install modules
   - npm install -g node-gyp node-pre-gyp node-pre-gyp-github
   - npm install
