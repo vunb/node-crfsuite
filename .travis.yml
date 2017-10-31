@@ -29,7 +29,6 @@ addons:
 sudo: false
 
 before_install:
-- $CXX --version
 - if [ "$TRAVIS_NODE_VERSION" = "0.8" ]; then npm install -g npm@2.7.3; fi;
 - if [ $TRAVIS_OS_NAME == "linux" ]; then
     export CC="gcc-4.8";
