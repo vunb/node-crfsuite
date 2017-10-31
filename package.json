@@ -30,7 +30,7 @@
   "binary": {
     "module_name": "crfsuite",
     "module_path": "./lib/binding/",
-    "host": "https://github.com/vunb/crfsuite/releases/download/",
+    "host": "https://github.com/vunb/node-crfsuite/releases/download/",
     "remote_path": "{version}"
   },
   "dependencies": {

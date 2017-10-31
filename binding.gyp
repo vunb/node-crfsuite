@@ -3,6 +3,13 @@
         {
             "target_name": "crfsuite",
             "cflags_cc": ['-O3', '-Wall', '-pedantic', '-std=c++11', '-fexceptions', '-DUSE_SSE', '-DUSE_SSE2'],
+            "conditions": [
+                ["OS==\"mac\"", {
+                    "xcode_settings": {
+                        "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
+                    }
+                }]
+            ],
             "sources": [
                 "liblbfgs/lib/lbfgs.c",
 
