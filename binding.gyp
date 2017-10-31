@@ -2,7 +2,7 @@
     "targets": [
         {
             "target_name": "crfsuite",
-            "cflags_cc": ['-O3', '-Wall', '-pedantic', '-std=c++11', '-fexceptions', '-DUSE_SSE', '-DUSE_SSE2'],
+            "cflags_cc": ['-O3', '-Wall', '-pedantic', '-std=c++11', '-DUSE_SSE', '-DUSE_SSE2'],
             "sources": [
                 "liblbfgs/lib/lbfgs.c",
 
