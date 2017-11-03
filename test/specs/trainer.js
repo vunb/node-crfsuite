@@ -1,9 +1,10 @@
-var fs = require('fs');
-var path = require('path');
-var test = require('tape');
-var crfsuite = require('../..');
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const test = require('tape');
+const crfsuite = require('../..');
 
-var trainer = new crfsuite.Trainer();
+const trainer = new crfsuite.Trainer();
 
 
 test('crfsuite trainer', function (t) {
