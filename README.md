@@ -18,6 +18,8 @@ Using npm:
 
 # API Usage
 
+See [docs](http://node-crfsuite.rtfd.io) and [examples](./examples).
+
 ## CRFSuite Tagger
 
 ```js
