@@ -18,6 +18,8 @@ Using npm:
 
 # API Usage
 
+See [docs](http://node-crfsuite.rtfd.io) and [examples](./examples).
+
 ## CRFSuite Tagger
 
 ```js
@@ -34,13 +36,20 @@ console.log('Tags: ', tags)
 ## CRFSuite Trainer
 
 ```js
+const path = require('path')
 const crfsuite = require('crfsuite')
 const trainer = crfsuite.Trainer()
 
-// TODO: Need to update api usage example.
-trainer.init()
-trainer.append()
-trainer.train()
+let model_filename = path.resolve('./model.crfsuite')
+
+let xseq = [['walk'], ['walk', 'shop'], ['clean', 'shop']]
+let yseq = ['sunny', 'sunny', 'rainy']
+
+// submit training data to the trainer
+trainer.append(xseq, yseq)
+trainer.train(model_filename)
+
+// output: ./model.crfsuite
 ```
 
 # Contributing

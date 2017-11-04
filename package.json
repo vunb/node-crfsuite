@@ -1,6 +1,6 @@
 {
   "name": "crfsuite",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "NodeJS binding for CRFsuite",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "postinstall": "node-pre-gyp install --fallback-to-build",
     "test": "tape test/start.js | tap-spec",
     "buildtest": "set PYTHON=C:\\Users\\nhuba\\.windows-build-tools\\python27\\python.exe&& npm run config && npm run build && npm test",
-    "publish-binary": "git commit --allow-empty -m '[publish binary]' && git push origin"
+    "publish-binary": "git commit --allow-empty -m \"[publish binary]\""
   },
   "repository": {
     "type": "git",
