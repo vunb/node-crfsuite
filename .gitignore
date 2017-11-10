@@ -67,4 +67,5 @@ typings/
 obj
 build
 lib/binding
+crfsuite.node
 model.crfsuite
