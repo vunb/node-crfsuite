@@ -28,7 +28,7 @@ install:
   # Check if we're building the latest tag, if so
   # then we publish the binaries if tests pass.
   - ps: >
-      if ($env:appveyor_repo_tag -match "true" -and ("$(git describe --tags --always HEAD)" -eq $env:appveyor_repo_tag_name)) {
+      if ($env:APPVEYOR_REPO_COMMIT_MESSAGE.ToLower().Contains('[publish binary]') -OR $(git describe --tags --always HEAD) -eq $env:APPVEYOR_REPO_BRANCH) {
         $env:publish_binary = "true";
       }
       if ($env:publish_binary -eq "true") {
