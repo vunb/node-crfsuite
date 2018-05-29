@@ -69,3 +69,4 @@ build
 lib/binding
 crfsuite.node
 model.crfsuite
+package-lock.json
