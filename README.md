@@ -12,7 +12,7 @@ A nodejs binding for crfsuite
 
 # Installation
 
-Using npm:
+For most "standard" use cases (on Mac, Linux, or Windows on a x86 or x64 processor), `node-crfsuite` will install nice and easy with:
 
 > npm install crfsuite --save
 
@@ -51,6 +51,47 @@ trainer.train(model_filename)
 
 // output: ./model.crfsuite
 ```
+
+# Installation Special Cases
+
+We use [node-pre-gyp](https://github.com/mapbox/node-pre-gyp) to compile and publish binaries of the library for most common use cases (Linux, Mac, Windows on standard processor platforms). If you have a special case, `node-crfsuite` will work, but it will compile the binary during the install. Compiling with nodejs is done via [node-gyp](https://github.com/nodejs/node-gyp) which requires Python 2.x, so please ensure you have it installed and in your path for all operating systems. Python 3.x will not work.
+
+* See [node-gyp installation prerequisites](https://github.com/nodejs/node-gyp#installation).
+
+## Build from source
+
+```bash
+# clone the project
+git clone https://github.com/vunb/node-crfsuite.git
+
+# go to working folder
+cd node-crfsuite
+
+# install dependencies and tools
+npm install
+
+# build node-crfsuite from source
+npm run build
+
+# run unit-test
+npm test
+```
+
+## Electron
+
+[Electron](https://electronjs.org/) is a framework for creating cross-platform desktop applications. It comes with its own version of the Node.js runtime.
+
+If you require `crfsuite` as a dependency for an Electron project, you must compile it for the version of Electron your project's using.
+
+When you first install `crfsuite` it will compile against the version of Node.js on your machine, not against the Node.js runtime bundled with Electron.
+
+To recompile `crfsuite` (or any native Node.js module) for Electron, you can use `electron-rebuild`; more info at Electron's [README](https://github.com/electron/electron-rebuild/blob/master/README.md).
+
+1. Run `npm install --save-dev electron-rebuild`
+2. Add `electron-rebuild` to your project's package.json's install hook
+3. Run `npm install`
+
+For an example project, check out [electron-crfsuite](https://github.com/vntk/electron-crfsuite).
 
 # Contributing
 
