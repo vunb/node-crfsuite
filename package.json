@@ -6,7 +6,7 @@
   "scripts": {
     "config": "node-pre-gyp configure",
     "build": "node-pre-gyp build",
-    "preinstall": "npm install node-pre-gyp node-gyp",
+    "preinstall": "npm install node-pre-gyp",
     "postinstall": "node-pre-gyp install --fallback-to-build",
     "test": "tape test/start.js | tap-spec",
     "buildtest": "set PYTHON=C:\\Users\\nhuba\\.windows-build-tools\\python27\\python.exe&& npm run config && npm run build && npm test",
