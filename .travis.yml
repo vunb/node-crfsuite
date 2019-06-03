@@ -4,60 +4,56 @@ compiler: gcc
 sudo: false
 
 os:
-- linux
-- osx
+    - linux
+    - osx
 
 env:
-  global:
-    - secure: Jer6INk7ftAkEmrzky9af9nB6MVkLTTjQ90JuD4NchQbmBiIAT80shIRfDEekqSoP8kDcIqdAXoWEVIyF6Un8TPStj8MomVEQSNZ25W9KIh+nx6CGLRdPEUb29QmGFq6MaZ5hDnNhzSCkkT/ljOj8KME5b0zPiwenA30kPYxCc8h3/SUp+Zb8NV2um9z+nkp69naHfX7nXXjGJer8yMFU0h5XpBmRY/vrv2cP6LJg+yaZA6vWbBbmQnxtnNMKrSmjh4+GSDg5ENu3mTtkHNd4aVpk52yXUNTmz0R3W33qd9nem189snWvI0N+v0Ww9hVv+Lo9sxPQS/Hwco+qtjmGRAeFbd6Y92Sgu+OWfNbPM2gQ2dgRpaC4o7/3zJDay85I9gIVVqgKez+DEfpOJcKlvFBuJ8IWCvQS5K45WTaIz6hnv+c7c06G244lzk/fPwD35rT6wug+aV7pGfhQg1nMoYeC7AVhtVWL8SJ6TIdoCOnvuGp4SeTkE4L6XvGZEblF/VDhexmhUjQhXiWMIw4MEx8VFS4wbVS1m4+HZ7xJ6Uz9DuNvg9EvwdSYudpE2QGn7dmzo/E+t5s7eotmQ9l1NEKjN0GAip36NpDNj1/8Ew1fWcijXRmkVbGbx2tm9qY2D62deNS9RNZk4EEy6Ts/egWXhzzokinh8LOXkBqIM4=
+    global:
+        - secure: ib9jghIMYPDaMA5ND9R1pR0T1HdiDu9pXYlHCrv4XYtyJsjyGhfu4HjFJBSoFfwaKa/g+WWjiJqKb6YpHEQacXqmFx/uOmSuKiQ7D376Yodf2cYvrXxJMsEyCg6PNrHVBWagzb538v/IkBv4h0WUO/Ln9//KROoYDFKzBIdbMWCZuva6zjBrklx59ShSALwCUcJ1EO7zLCcZLbikP+fODMZ0Wt+FspQg+KzbNXE52/i07HZc4pn7sdWLXUWbRigV8vrWa1nhW2+CT5hSd9SPLeFhSjLSNLsX5BZA6kif1I/YjKjBSBHSpTI8Cpfo8DQMKBykmZtSw1iE9jXJXhwfQH5WJ8SjQuBXeQF53hhiOdLais5K8sX+a1Lh5WMWQ7QkBnjCHuFEO4FMGVrRq04ugOMPJ2O7tVMimDwAqejHvmypQ8b01W9AfoFZpIHszIIRdcjH6N0yegaCNNBv3Tv0pzW3XoSUpSV1nKajMEWkon2TKH5HAAScMgS/7QlnP6RtdFRoW3JVYDH/1zWclQu1cwQnrYyVRDm1vtN1dJv+YKD3LtpzpsrIZ2/SRBCFPCC15e3xvPtL+7IUVUZn4BV8DQ8FjDA21zyLOLK5bVaNG0sCKPc/Z/2q25CeaoZt8ySkP1WclljhX/+np5E07UB/qO97n42wzM7qJaT4QGwc5wo=
 
 node_js:
-- '4'
-- '5'
-- '6'
-- '7'
-- '8'
-- '9'
+    - '7'
+    - '8'
+    - '9'
+    - '10'
 
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
-    - g++-4.8
-    
-sudo: false
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc-4.8
+            - g++-4.8
 
 before_install:
-- if [ "$TRAVIS_NODE_VERSION" = "0.8" ]; then npm install -g npm@2.7.3; fi;
-- if [ $TRAVIS_OS_NAME == "linux" ]; then
-    export CC="gcc-4.8";
-    export CXX="g++-4.8";
-    export LINK="gcc-4.8";
-    export LINKXX="g++-4.8";
-  fi
-- nvm --version
-- node --version
-- npm --version
-- gcc --version
-- g++ --version
+    - if [ "$TRAVIS_NODE_VERSION" = "0.8" ]; then npm install -g npm@2.7.3; fi;
+    - if [ $TRAVIS_OS_NAME == "linux" ]; then
+        export CC="gcc-4.8";
+        export CXX="g++-4.8";
+        export LINK="gcc-4.8";
+        export LINKXX="g++-4.8";
+        fi
+    - nvm --version
+    - node --version
+    - npm --version
+    - gcc --version
+    - g++ --version
 
 before_script:
-# figure out if we should publish
-- echo $TRAVIS_BRANCH
-- echo `git describe --tags --always HEAD`
-- PUBLISH_BINARY=false
-- COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
-- if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` || ${COMMIT_MESSAGE} =~ "[publish binary]" ]]; then PUBLISH_BINARY=true; fi;
-- echo "Publishing binaries? ->" $PUBLISH_BINARY
+    # figure out if we should publish
+    - echo $TRAVIS_BRANCH
+    - echo `git describe --tags --always HEAD`
+    - PUBLISH_BINARY=false
+    - COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
+    - if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` || ${COMMIT_MESSAGE} =~ "[publish binary]" ]]; then PUBLISH_BINARY=true; fi;
+    - echo "Publishing binaries? ->" $PUBLISH_BINARY
 
 install:
-- npm install --build-from-source
+    - npm install --build-from-source
 
 script:
-- npm test
-- if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package && node-pre-gyp-github publish --release; fi;
+    - npm test
+    - if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package && node-pre-gyp-github publish --release; fi;
 
 #cache:
 #  directories:
