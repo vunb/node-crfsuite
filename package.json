@@ -1,6 +1,6 @@
 {
-  "name": "crfsuite",
-  "version": "0.9.5",
+  "name": "crfsuite-js",
+  "version": "0.9.6",
   "description": "Fork of the node-crfsuite, a NodeJS binding for CRFsuite",
   "main": "index.js",
   "scripts": {
