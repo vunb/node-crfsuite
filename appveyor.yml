@@ -4,15 +4,11 @@ environment:
     secure: ccYzaN4TslxESt7ITv1pVGLqtVEDzTAZwIEY0jxc3tjvRzZrzGm5V8pJPdgknlLZ
 
   matrix:
-  - nodejs_version: "4"
-  - nodejs_version: "5"
   - nodejs_version: "6"
-  - nodejs_version: "7"
   - nodejs_version: "8"
   - nodejs_version: "9"
   - nodejs_version: "10"
   - nodejs_version: "11"
-  - nodejs_version: "12"
 
 platform:
   - x64
