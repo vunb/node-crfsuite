@@ -21,8 +21,8 @@ install:
   - set PATH=%APPDATA%\npm;%PATH%
   # install submodules
   - git submodule update --init
-    # fixes nodejs/node-gyp#972
-  - npm install -g npm@5.7.1
+  # fixes nodejs/node-gyp#972
+  # - npm install -g npm@5.7.1
   # install modules
   - npm install -g node-pre-gyp node-pre-gyp-github
   - npm install --build-from-source
