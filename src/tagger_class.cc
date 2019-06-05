@@ -69,7 +69,7 @@ void TaggerClass::New(const FunctionCallbackInfo<Value>& args) {
 }
 
 
-void TaggerClass::Open(const v8::FunctionCallbackInfo<v8::Value>& args) { 
+void TaggerClass::Open(const v8::FunctionCallbackInfo<v8::Value>& args) {
   Isolate* isolate = args.GetIsolate();
   TaggerClass* obj = ObjectWrap::Unwrap<TaggerClass>(args.Holder());
 
@@ -147,7 +147,7 @@ void TaggerClass::Tag(const v8::FunctionCallbackInfo<v8::Value>& args) {
   args.GetReturnValue().Set(array);
 }
 
-void TaggerClass::GetLabels(const v8::FunctionCallbackInfo<v8::Value>& args) { 
+void TaggerClass::GetLabels(const v8::FunctionCallbackInfo<v8::Value>& args) {
   Isolate* isolate = args.GetIsolate();
   TaggerClass* obj = ObjectWrap::Unwrap<TaggerClass>(args.Holder());
 

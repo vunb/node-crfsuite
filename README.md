@@ -77,22 +77,6 @@ npm run build
 npm test
 ```
 
-## Electron
-
-[Electron](https://electronjs.org/) is a framework for creating cross-platform desktop applications. It comes with its own version of the Node.js runtime.
-
-If you require `crfsuite` as a dependency for an Electron project, you must compile it for the version of Electron your project's using.
-
-When you first install `crfsuite` it will compile against the version of Node.js on your machine, not against the Node.js runtime bundled with Electron.
-
-To recompile `crfsuite` (or any native Node.js module) for Electron, you can use `electron-rebuild`; more info at Electron's [README](https://github.com/electron/electron-rebuild/blob/master/README.md) and [here](https://github.com/electron/electron/blob/master/docs/tutorial/using-native-node-modules.md).
-
-1. Run `npm install --save-dev electron-rebuild`
-2. Add `electron-rebuild` to your project's package.json's install hook
-3. Run `npm install`
-
-For an example project, check out [electron-crfsuite](https://github.com/vntk/electron-crfsuite).
-
 # Contributing
 
 Pull requests and stars are highly welcome.

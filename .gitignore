@@ -64,8 +64,9 @@ typings/
 # operating systems, file systems, etc.
 ################################################
 
+.vscode
 obj
-build
+build*
 lib/binding
 crfsuite.node
 model.crfsuite
