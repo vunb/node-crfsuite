@@ -1,6 +1,6 @@
 {
   "name": "crfsuite",
-  "version": "1.0.0-beta-1",
+  "version": "0.9.5",
   "description": "NodeJS binding for CRFsuite",
   "main": "index.js",
   "scripts": {
@@ -28,8 +28,8 @@
   "homepage": "https://github.com/vunb/node-crfsuite#readme",
   "binary": {
     "module_name": "crfsuite",
-    "module_path": "./lib/binding/napi-v{napi_build_version}",
-    "package_name": "{module_name}-v{version}-{platform}-{arch}-napi-v{napi_build_version}-{node_abi}.tar.gz",
+    "module_path": "./lib/binding/{node_napi_label}",
+    "package_name": "{module_name}-{platform}-{arch}-{node_napi_label}.tar.gz",
     "host": "https://github.com/vunb/node-crfsuite/releases/download/",
     "remote_path": "{version}",
     "napi_versions": [
