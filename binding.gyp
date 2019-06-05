@@ -49,7 +49,11 @@
         "src/trainer_class.cc",
         "src/tagger_class.cc"
       ],
+      "defines": [
+        "NAPI_VERSION=<(napi_build_version)",
+      ],
       "include_dirs": [
+        "<!(node -e \"require('nan')\")",
         "liblbfgs/include",
         "crfsuite/include",
         "crfsuite/lib/cqdb/include"

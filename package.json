@@ -47,12 +47,13 @@
     "index.js"
   ],
   "dependencies": {
-    "node-pre-gyp": "^0.13.0"
+    "nan": "2.8.0",
+    "node-pre-gyp": "0.13.0"
   },
   "devDependencies": {
-    "node-gyp": "^4.0.0",
+    "node-gyp": "4.0.0",
     "node-pre-gyp-github": "1.4.3",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.10.2"
+    "tap-spec": "5.0.0",
+    "tape": "4.10.2"
   }
 }

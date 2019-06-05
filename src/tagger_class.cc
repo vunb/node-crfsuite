@@ -1,5 +1,5 @@
 #include <iostream>
-#include <node_api.h>
+#include <node.h>
 
 //#include <crfsuite.hpp>
 #include "tagger_class.h"
