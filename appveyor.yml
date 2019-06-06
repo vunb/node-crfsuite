@@ -45,10 +45,8 @@ test_script:
   - npm --version
   # run tests
   - npm test
-  # test package
-  - node-pre-gyp configure clean build package
   # publish binary
-  - ps: if ($env:publish_binary -eq "true") { node-pre-gyp-github publish --release }
+  - ps: if ($env:publish_binary -eq "true") { node-pre-gyp configure clean build package; node-pre-gyp-github publish --release }
 
 # Don't actually build.
 build: off
