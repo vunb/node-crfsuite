@@ -46,7 +46,7 @@ test_script:
   # run tests
   - npm test
   # test package
-  - node-pre-gyp build package
+  - node-pre-gyp configure clean build package
   # publish binary
   - ps: if ($env:publish_binary -eq "true") { node-pre-gyp-github publish --release }
 
