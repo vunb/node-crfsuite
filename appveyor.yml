@@ -4,12 +4,10 @@ environment:
     secure: ex3daTUjJEaSvxAKyUiPOiLjEoYhmisgN9YjzbdYvMhdu3YyZo56JyEcTPjKIhQz
 
   matrix:
-  - nodejs_version: "11"
   - nodejs_version: "10"
-  - nodejs_version: "9"
-  - nodejs_version: "8"
   - nodejs_version: "7"
-  - nodejs_version: "6"
+  - nodejs_version: "5"
+  - nodejs_version: "4"
 
 platform:
   - x64
@@ -47,8 +45,10 @@ test_script:
   - npm --version
   # run tests
   - npm test
+  # test package
+  - node-pre-gyp clean build package
   # publish binary
-  - ps: if ($env:publish_binary -eq "true") { node-pre-gyp rebuild package; node-pre-gyp-github publish --release }
+  - ps: if ($env:publish_binary -eq "true") { node-pre-gyp-github publish --release }
 
 # Don't actually build.
 build: off
