@@ -1,7 +1,7 @@
 os: unstable
 environment:
   NODE_PRE_GYP_GITHUB_TOKEN:
-    secure: ccYzaN4TslxESt7ITv1pVGLqtVEDzTAZwIEY0jxc3tjvRzZrzGm5V8pJPdgknlLZ
+    secure: ex3daTUjJEaSvxAKyUiPOiLjEoYhmisgN9YjzbdYvMhdu3YyZo56JyEcTPjKIhQz
 
   matrix:
   - nodejs_version: "11"
@@ -48,7 +48,7 @@ test_script:
   # run tests
   - npm test
   # publish binary
-  - ps: if ($env:publish_binary -eq "true") { node-pre-gyp package; node-pre-gyp-github publish --release }
+  - ps: if ($env:publish_binary -eq "true") { node-pre-gyp rebuild package; node-pre-gyp-github publish --release }
 
 # Don't actually build.
 build: off
