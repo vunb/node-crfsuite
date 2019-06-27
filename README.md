@@ -12,13 +12,11 @@ A nodejs binding for crfsuite
 
 # Installation
 
-For most "standard" use cases (on Mac, Linux, or Windows on a x86 or x64 processor), `node-crfsuite` will install nice and easy with:
+For most "standard" use cases (on Mac, Linux, or Windows on a x86 or x64 processor), `node-crfsuite` will install easy with:
 
-> npm install crfsuite --save
+> npm install crfsuite
 
 # API Usage
-
-See [docs](http://node-crfsuite.rtfd.io) and [examples](./examples).
 
 ## CRFSuite Tagger
 
@@ -62,20 +60,32 @@ We use [node-pre-gyp](https://github.com/mapbox/node-pre-gyp) to compile and pub
 
 ```bash
 # clone the project
-git clone https://github.com/vunb/node-crfsuite.git
+git clone --recursive https://github.com/vunb/node-crfsuite.git
 
 # go to working folder
 cd node-crfsuite
 
-# install dependencies and tools
+# install dependencies and build the binary
 npm install
+```
 
-# build node-crfsuite from source
+For development:
+
+```bash
+# rebuild
 npm run build
 
 # run unit-test
 npm test
 ```
+
+# Change Log
+
+### 2019-06-09: uses N-API
+
+From `crfsuite@0.9.6` the library uses `N-API` to use the binary in multiple version of Node.
+
+* [Acording to Node.js Foundation](https://medium.com/the-node-js-collection/4f35b781f00e): With N-API, native module developers can compile their module once per platform and architecture, and make it available for any version of Node.js that implements N-API. This holds true even for versions of Node.js that are built with a different VM, e.g. [Node-ChakraCore](https://github.com/nodejs/node-chakracore/).
 
 # Contributing
 
