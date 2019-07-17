@@ -1,6 +1,6 @@
 {
   "name": "crfsuite",
-  "version": "0.9.6",
+  "version": "1.0.0",
   "description": "NodeJS binding for CRFsuite",
   "main": "index.js",
   "types": "index.d.ts",
