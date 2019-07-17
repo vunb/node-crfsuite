@@ -53,7 +53,7 @@
         "NAPI_VERSION=<(napi_build_version)",
       ],
       "include_dirs": [
-        "<!(node -e \"require('nan')\")",
+        "<!@(node -p \"require('node-addon-api').include\")"
         "liblbfgs/include",
         "crfsuite/include",
         "crfsuite/lib/cqdb/include"
