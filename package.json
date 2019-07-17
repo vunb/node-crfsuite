@@ -3,12 +3,15 @@
   "version": "0.9.6",
   "description": "NodeJS binding for CRFsuite",
   "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "config": "node-pre-gyp configure",
     "build": "node-pre-gyp rebuild",
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "tape test/start.js | tap-spec",
-    "buildtest": "set PYTHON=C:\\Users\\nhuba\\.windows-build-tools\\python27\\python.exe&& npm run config && npm run build && npm test",
     "publish-binary": "git commit --allow-empty -m \"[publish binary]\""
   },
   "repository": {
@@ -44,16 +47,17 @@
     "liblbfgs/lib",
     "liblbfgs/include",
     "binding.gyp",
-    "index.js"
+    "index.js",
+    "index.d.ts"
   ],
   "dependencies": {
-    "nan": "2.8.0",
-    "node-pre-gyp": "0.13.0"
+    "node-addon-api": "^1.6.3",
+    "node-pre-gyp": "^0.13.0"
   },
   "devDependencies": {
-    "node-gyp": "4.0.0",
-    "node-pre-gyp-github": "1.4.3",
-    "tap-spec": "5.0.0",
-    "tape": "4.10.2"
+    "node-gyp": "^4.0.0",
+    "node-pre-gyp-github": "^1.4.3",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.11.0"
   }
 }

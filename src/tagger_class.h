@@ -1,26 +1,30 @@
 #ifndef _TAGGER_CLASS_H_
 #define _TAGGER_CLASS_H_
 
-#include <node.h>
-#include <node_object_wrap.h>
-
+#include <napi.h>
 #include <crfsuite_api.hpp>
 
-class TaggerClass : public node::ObjectWrap {
+class TaggerClass : public Napi::ObjectWrap<TaggerClass>
+{
 public:
-  static void Init(v8::Local<v8::Object> exports);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  explicit TaggerClass(const Napi::CallbackInfo &info);
+
+  /**
+   * Destructor
+   */
+  ~TaggerClass()
+  {
+    delete tagger;
+  }
 
 private:
-  explicit TaggerClass();
-  ~TaggerClass();
+  static Napi::FunctionReference constructor;
 
-  static v8::Persistent<v8::Function> constructor;
-  static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-  static void Open(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Close(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Tag(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void GetLabels(const v8::FunctionCallbackInfo<v8::Value>& args);
+  Napi::Value Open(const Napi::CallbackInfo &info);
+  Napi::Value Close(const Napi::CallbackInfo &info);
+  Napi::Value Tag(const Napi::CallbackInfo &info);
+  Napi::Value GetLabels(const Napi::CallbackInfo &info);
 
   CRFSuite::Tagger *tagger;
 };

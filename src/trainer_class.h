@@ -1,34 +1,39 @@
 #ifndef _TRAINER_CLASS_H_
 #define _TRAINER_CLASS_H_
 
-#include <node.h>
-#include <node_object_wrap.h>
-
+#include <napi.h>
 #include <crfsuite_api.hpp>
 
-class NodeTrainer : public CRFSuite::Trainer { 
+class NodeTrainer : public CRFSuite::Trainer
+{
 public:
-  virtual void message(const std::string& msg);
+  virtual void message(const std::string &msg);
 };
 
-class TrainerClass : public node::ObjectWrap {
+class TrainerClass : public Napi::ObjectWrap<TrainerClass>
+{
 public:
-  static void Init(v8::Local<v8::Object> exports);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  explicit TrainerClass(const Napi::CallbackInfo &info);
+
+  /**
+   * Destructor
+   */
+  ~TrainerClass()
+  {
+    if (trainer)
+      delete trainer;
+  }
 
 private:
-  explicit TrainerClass();
-  ~TrainerClass();
-
-  static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void InitTrainer(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void GetParams(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void SetParams(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Append(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Train(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-  static v8::Persistent<v8::Function> constructor;
-
+  static Napi::FunctionReference constructor;
   NodeTrainer *trainer;
+
+  Napi::Value InitTrainer(const Napi::CallbackInfo &info);
+  Napi::Value GetParams(const Napi::CallbackInfo &info);
+  void SetParams(const Napi::CallbackInfo &info);
+  void Append(const Napi::CallbackInfo &info);
+  Napi::Value Train(const Napi::CallbackInfo &info);
 };
 
 #endif

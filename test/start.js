@@ -2,8 +2,8 @@ var path = require('path');
 var dir = '../test/specs/';
 
 [
-    'trainer',
-    'tagger'
+  'trainer',
+  'tagger'
 ].forEach((script) => {
-    require(path.join(dir, script));
+  require(path.join(dir, script));
 });
