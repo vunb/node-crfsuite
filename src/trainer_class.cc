@@ -8,11 +8,11 @@ void NodeTrainer::message(const std::string &msg)
   std::cout << msg;
 }
 
-TrainerClass::TrainerClass(const Napi::CallbackInfo &info)
-    : Napi::ObjectWrap<TrainerClass>(info), trainer(NULL)
-{
-  Napi::HandleScope scope(info.Env());
-}
+// TrainerClass::TrainerClass(const Napi::CallbackInfo &info)
+//     : Napi::ObjectWrap<TrainerClass>(info), trainer(NULL)
+// {
+//   Napi::HandleScope scope(info.Env());
+// }
 
 Napi::Object TrainerClass::Init(Napi::Env env, Napi::Object exports)
 {
@@ -33,7 +33,8 @@ Napi::Object TrainerClass::Init(Napi::Env env, Napi::Object exports)
   return exports;
 }
 
-TrainerClass::TrainerClass(const Napi::CallbackInfo &info) : Napi::ObjectWrap<TrainerClass>(info)
+TrainerClass::TrainerClass(const Napi::CallbackInfo &info)
+    : Napi::ObjectWrap<TrainerClass>(info)
 {
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);

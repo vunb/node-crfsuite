@@ -29,7 +29,6 @@ private:
   static Napi::FunctionReference constructor;
   NodeTrainer *trainer;
 
-  static void New(const Napi::CallbackInfo &info);
   Napi::Value InitTrainer(const Napi::CallbackInfo &info);
   Napi::Value GetParams(const Napi::CallbackInfo &info);
   void SetParams(const Napi::CallbackInfo &info);

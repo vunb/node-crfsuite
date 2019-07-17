@@ -11,11 +11,60 @@
     },
     {
       "target_name": "crfsuite",
-      "cflags_cc": ['-O3', '-Wall', '-pedantic', '-std=c++11', '-fexceptions', '-DUSE_SSE', '-DUSE_SSE2'],
+      "cflags_cc": [
+        "-std=c++11",
+        "-pthread",
+        "-fexceptions",
+        "-O3",
+        "-Wall",
+        "-Wno-sign-compare",
+        "-pedantic",
+        "-DUSE_SSE",
+        "-DUSE_SSE2"
+      ],
       "conditions": [
-        ["OS==\"mac\"", {
+        [ "OS=='linux'", {
+          "cflags+": [ "-std=c++11", "-fexceptions" ],
+          "cflags_c+": [ "-std=c++11", "-fexceptions" ],
+          "cflags_cc+": [ "-std=c++11", "-fexceptions" ],
+        }],
+        [ "OS=='freebsd'", {
+          "cflags+": [ "-std=c++11", "-fexceptions" ],
+          "cflags_c+": [ "-std=c++11", "-fexceptions" ],
+          "cflags_cc+": [ "-std=c++11", "-fexceptions" ],
+        }],
+        [ "OS=='mac'", {
+          "cflags+": [ "-stdlib=libc++" ],
           "xcode_settings": {
-            "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
+            "OTHER_CPLUSPLUSFLAGS" : [ "-std=c++11", "-stdlib=libc++", "-pthread" ],
+            "OTHER_LDFLAGS": [ "-stdlib=libc++" ],
+            "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+            "MACOSX_DEPLOYMENT_TARGET": "10.7",
+            "CLANG_CXX_LANGUAGE_STANDARD":"c++11",
+            "CLANG_CXX_LIBRARY": "libc++"
+          },
+        }],
+        [
+        "OS=='win'", {
+          "cflags": [
+            "-Wall"
+          ],
+          "defines": [
+            "WIN"
+          ],
+          "msvs_settings": {
+            "VCCLCompilerTool": {
+              "ExceptionHandling": "2",
+              "DisableSpecificWarnings": [
+                "4244"
+              ],
+            },
+            "VCLinkerTool": {
+              "LinkTimeCodeGeneration": 1,
+              "OptimizeReferences": 2,
+              "EnableCOMDATFolding": 2,
+              "LinkIncremental": 1,
+            }
           }
         }]
       ],
@@ -53,10 +102,10 @@
         "NAPI_VERSION=<(napi_build_version)",
       ],
       "include_dirs": [
-        "<!@(node -p \"require('node-addon-api').include\")"
         "liblbfgs/include",
         "crfsuite/include",
-        "crfsuite/lib/cqdb/include"
+        "crfsuite/lib/cqdb/include",
+        "<!@(node -p \"require('node-addon-api').include\")"
       ]
     }
   ]
