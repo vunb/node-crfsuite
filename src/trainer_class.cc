@@ -1,225 +1,175 @@
 #include <iostream>
-#include <node.h>
-
 #include "trainer_class.h"
 
-using v8::Context;
-using v8::Function;
-using v8::FunctionCallbackInfo;
-using v8::FunctionTemplate;
-using v8::Isolate;
-using v8::Local;
-using v8::Array;
-using v8::Number;
-using v8::Object;
-using v8::Persistent;
-using v8::String;
-using v8::Value;
+Napi::FunctionReference TrainerClass::constructor;
 
-
-Persistent<Function> TrainerClass::constructor;
-
-void NodeTrainer::message(const std::string& msg) { 
+void NodeTrainer::message(const std::string &msg)
+{
   std::cout << msg;
 }
 
-TrainerClass::TrainerClass() : trainer(NULL) {
-
+TrainerClass::TrainerClass(const Napi::CallbackInfo &info)
+    : Napi::ObjectWrap<TrainerClass>(info), trainer(NULL)
+{
+  Napi::HandleScope scope(info.Env());
 }
 
-TrainerClass::~TrainerClass() {
-  if (trainer)
-    delete trainer;
+Napi::Object TrainerClass::Init(Napi::Env env, Napi::Object exports)
+{
+  Napi::HandleScope scope(env);
+  Napi::Function func = DefineClass(env, "TrainerClass",
+                                    {InstanceMethod("init", &TrainerClass::InitTrainer),
+                                     InstanceMethod("get_params", &TrainerClass::GetParams),
+                                     InstanceMethod("set_params", &TrainerClass::SetParams),
+                                     InstanceMethod("append", &TrainerClass::Append),
+                                     InstanceMethod("train", &TrainerClass::Train)
+
+                                    });
+
+  constructor = Napi::Persistent(func);
+  constructor.SuppressDestruct();
+
+  exports.Set("Trainer", func);
+  return exports;
 }
 
-void TrainerClass::Init(Local<Object> exports) {
-  Isolate* isolate = exports->GetIsolate();
+TrainerClass::TrainerClass(const Napi::CallbackInfo &info) : Napi::ObjectWrap<TrainerClass>(info)
+{
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
 
-  // Prepare constructor template
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-  tpl->SetClassName(String::NewFromUtf8(isolate, "TrainerClass"));
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  NODE_SET_PROTOTYPE_METHOD(tpl, "init", InitTrainer);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "get_params", GetParams);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "set_params", SetParams);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "append", Append);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "train", Train);
-
-  constructor.Reset(isolate, tpl->GetFunction());
-  exports->Set(String::NewFromUtf8(isolate, "TrainerClass"), tpl->GetFunction());
+  this->trainer = new NodeTrainer();
+  this->trainer->select("lbfgs", "crf1d");
 }
 
-
-void TrainerClass::New(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  if (args.IsConstructCall()) {
-    // Invoked as constructor: `new MyObject(...)`
-    TrainerClass* obj = new TrainerClass();
-
-    obj->trainer = new NodeTrainer();
-    obj->trainer->select("lbfgs", "crf1d");
-
-    obj->Wrap(args.This());
-    args.GetReturnValue().Set(args.This());
-  } else {
-    // Invoked as plain function `MyObject(...)`, turn into construct call.
-    const int argc = 1;
-    Local<Value> argv[argc] = { args[0] };
-    Local<Context> context = isolate->GetCurrentContext();
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> result = cons->NewInstance(context, argc, argv).ToLocalChecked();
-    args.GetReturnValue().Set(result);
-  }
+Napi::Value TrainerClass::InitTrainer(const Napi::CallbackInfo &info)
+{
+  //  Isolate* isolate = args.GetIsolate();
+  //  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
+  //  obj->trainer = new NodeTrainer();
+  //  args.GetReturnValue().Set(v8::Boolean::New(isolate, obj->trainer->select("lbfgs", "crf1d")));
+  return Napi::Boolean::New(info.Env(), true);
 }
 
+Napi::Value TrainerClass::GetParams(const Napi::CallbackInfo &info)
+{
+  CRFSuite::StringList params = this->trainer->params();
 
-void TrainerClass::InitTrainer(const FunctionCallbackInfo<Value>& args) {
-//  Isolate* isolate = args.GetIsolate();
-//  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
-//  obj->trainer = new NodeTrainer();
-//  args.GetReturnValue().Set(v8::Boolean::New(isolate, obj->trainer->select("lbfgs", "crf1d")));
-}
+  // Create a new empty object.
+  Napi::Object obj = Napi::Object::New(info.Env());
 
-void TrainerClass::GetParams(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
-
-  CRFSuite::StringList params = obj->trainer->params();
-
-  // Create a new empty array.
-  Local<v8::Object> array = v8::Object::New(isolate);
-
-  for (size_t i = 0; i < params.size(); i++) {
-    Local<String> name = String::NewFromUtf8(isolate, params[i].c_str());
-    Local<String> value = String::NewFromUtf8(isolate, obj->trainer->get(params[i]).c_str());
-
-    array->Set(name, value);
+  for (size_t i = 0; i < params.size(); i++)
+  {
+    obj.Set(params[i], this->trainer->get(params[i]));
   }
 
-  args.GetReturnValue().Set(array);
+  return obj;
 }
 
-void TrainerClass::SetParams(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  if (args.Length() == 0) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Options argument is missing"));
-    return;
+void TrainerClass::SetParams(const Napi::CallbackInfo &info)
+{
+  if (info.Length() == 0 || !info[0].IsObject())
+  {
+    Napi::TypeError::New(info.Env(), "Options argument is missing or invalid").ThrowAsJavaScriptException();
   }
 
-  if (!args[0]->IsObject()) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Not an associative array"));
-    return;
-  }
+  Napi::Object params = info[0].As<Napi::Object>();
+  Napi::Array property_names = params.GetPropertyNames();
 
-  Local<Object> params = Local<Object>::Cast(args[0]);
-  Local<Array> property_names = params->GetOwnPropertyNames();
-  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
+  for (size_t i = 0; i < property_names.Length(); ++i)
+  {
+    Napi::Value key = property_names.Get(i);
+    Napi::Value value = params.Get(key);
 
-  for (size_t i = 0; i < property_names->Length(); ++i) {
-    Local<Value> key = property_names->Get(i);
-    Local<Value> value = params->Get(key);
-
-    if (key->IsString()) {
-        String::Utf8Value utf8_key(key);
-        String::Utf8Value utf8_value(value->ToString());
-
-        obj->trainer->set(*utf8_key, *utf8_value);
-    } else {
-      isolate->ThrowException(String::NewFromUtf8(isolate, "invalid parameter name"));
+    if (key.IsString())
+    {
+      this->trainer->set(key.As<Napi::String>().Utf8Value(), value.ToString().Utf8Value());
+    }
+    else
+    {
+      Napi::TypeError::New(info.Env(), "Invalid parameter name").ThrowAsJavaScriptException();
     }
   }
-
-//  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
 }
 
-void TrainerClass::Append(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  if (args.Length() < 2) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Invalid number of arguments"));
-    return;
+void TrainerClass::Append(const Napi::CallbackInfo &info)
+{
+  if (info.Length() < 2)
+  {
+    Napi::TypeError::New(info.Env(), "Invalid number of arguments").ThrowAsJavaScriptException();
   }
 
-  if (!args[0]->IsArray()) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "xseq (training data) argument must be an array of arrays"));
-    return;
+  if (!info[0].IsArray())
+  {
+    Napi::TypeError::New(info.Env(), "xseq (training data) argument must be an array of arrays").ThrowAsJavaScriptException();
   }
 
-  if (!args[1]->IsArray()) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "yseq (labels) argument must be an array"));
-    return;
+  if (!info[1].IsArray())
+  {
+    Napi::TypeError::New(info.Env(), "yseq (labels) argument must be an array").ThrowAsJavaScriptException();
   }
 
-  Local<Array> xseq = Local<Array>::Cast(args[0]);
-  Local<Array> yseq = Local<Array>::Cast(args[1]);
+  Napi::Array xseq = info[0].As<Napi::Array>(); // Local<Array>::Cast(args[0]);
+  Napi::Array yseq = info[1].As<Napi::Array>(); // Local<Array>::Cast(args[1]);
 
-  if (xseq->Length() != yseq->Length()) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "xseq and yseq must be of same size"));
-    return;
+  if (xseq.Length() != yseq.Length())
+  {
+    Napi::TypeError::New(info.Env(), "xseq and yseq must be of same size").ThrowAsJavaScriptException();
   }
 
   CRFSuite::ItemSequence items;
   CRFSuite::StringList labels;
 
-  for (size_t i = 0; i < xseq->Length(); ++i) {
-    Local<Value> val = xseq->Get(i);
-    if (!val->IsArray()) { 
-      isolate->ThrowException(String::NewFromUtf8(isolate, "xseq (training data) argument must be an array of arrays"));
-      return;
+  for (size_t i = 0; i < xseq.Length(); ++i)
+  {
+    Napi::Value val = xseq.Get(i);
+    if (!val.IsArray())
+    {
+      Napi::TypeError::New(info.Env(), "xseq (training data) argument must be an array of arrays").ThrowAsJavaScriptException();
     }
 
-    Local<Array> xxseq = Local<Array>::Cast(val);
+    Napi::Array xxseq = val.As<Napi::Array>();
 
     CRFSuite::Item item;
     item.empty();
 
-    for (size_t j = 0; j < xxseq->Length(); ++j) {
-      Local<String> attrName = xxseq->Get(j)->ToString();
-      String::Utf8Value utf8_key(attrName);
-      item.push_back(CRFSuite::Attribute(*utf8_key));
+    for (size_t j = 0; j < xxseq.Length(); ++j)
+    {
+      Napi::String attrName = xxseq.Get(j).ToString();
+      item.push_back(CRFSuite::Attribute(attrName.Utf8Value()));
     }
     items.push_back(item);
   }
 
-  for (size_t i = 0; i < yseq->Length(); ++i) {
-      Local<String> attrName = yseq->Get(i)->ToString();
-      String::Utf8Value utf8_key(attrName);
-      labels.push_back(*utf8_key);
+  for (size_t i = 0; i < yseq.Length(); ++i)
+  {
+    Napi::String attrName = yseq.Get(i).ToString();
+    labels.push_back(attrName.Utf8Value());
   }
 
-  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
-
-  try {
-    obj->trainer->append(items, labels, 0);
-  } catch (std::invalid_argument &e) {
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Invalid arguments"));
-  } catch (std::runtime_error &e) {
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Out of memory"));
+  try
+  {
+    this->trainer->append(items, labels, 0);
+  }
+  catch (std::invalid_argument &e)
+  {
+    Napi::TypeError::New(info.Env(), "Invalid arguments").ThrowAsJavaScriptException();
+  }
+  catch (std::runtime_error &e)
+  {
+    Napi::TypeError::New(info.Env(), "Out of memory").ThrowAsJavaScriptException();
   }
 }
 
-void TrainerClass::Train(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  if (args.Length() < 1) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Path to model file is missing"));
-    return;
+Napi::Value TrainerClass::Train(const Napi::CallbackInfo &info)
+{
+  if (info.Length() < 1 || !info[0].IsString())
+  {
+    Napi::TypeError::New(info.Env(), "Path to model file is missing or invalid").ThrowAsJavaScriptException();
   }
 
-  if (!args[0]->IsString()) { 
-    isolate->ThrowException(String::NewFromUtf8(isolate, "Invalid path to model file"));
-    return;
-  }
+  Napi::String path = info[0].As<Napi::String>();
+  int32_t status = this->trainer->train(path.Utf8Value(), -1);
 
-  Local<String> path = args[0]->ToString();
-  String::Utf8Value utf8_path(path);
-
-  TrainerClass* obj = ObjectWrap::Unwrap<TrainerClass>(args.Holder());
-
-  args.GetReturnValue().Set(v8::Number::New(isolate, obj->trainer->train(*utf8_path, -1)));
+  return Napi::Number::New(info.Env(), status);
 }

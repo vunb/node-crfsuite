@@ -13,7 +13,8 @@ export interface TrainerCallback {
 
 export declare class Trainer {
   append(xseq: Array<string[]>, yseq: string[]): void;
-  train(model_filename: string): void;
+  train(model_filename: string): number;
+  get_params(options: Options): any;
   set_params(options: Options): void;
   set_callback(callback: TrainerCallback): void;
 }
