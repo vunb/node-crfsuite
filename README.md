@@ -22,7 +22,7 @@ For most "standard" use cases (on Mac, Linux, or Windows on a x86 or x64 process
 
 ```js
 const crfsuite = require('crfsuite')
-const tagger = crfsuite.Tagger()
+const tagger = new crfsuite.Tagger()
 
 let is_opened = tagger.open('./path/to/crf.model')
 console.log('File model is opened:', is_opened)
@@ -36,7 +36,7 @@ console.log('Tags: ', tags)
 ```js
 const path = require('path')
 const crfsuite = require('crfsuite')
-const trainer = crfsuite.Trainer()
+const trainer = new crfsuite.Trainer()
 
 let model_filename = path.resolve('./model.crfsuite')
 
@@ -80,6 +80,15 @@ npm test
 ```
 
 # Change Log
+
+### 2019-07-18: Release version 1.0.0
+
+* Convert all sources to use N-API, remove `nan`
+* Add typescript declaration file
+* Cleanup package dependencies
+* CI Tool run & test only in node version 10 LTS
+* Add project convention: `.gitattributes`, `.editorconfig`
+* Enforced to use `new` keyword to create new **Tagger** and **Trainer**
 
 ### 2019-06-09: uses N-API
 
