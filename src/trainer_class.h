@@ -7,7 +7,10 @@
 class NodeTrainer : public CRFSuite::Trainer
 {
 public:
+  NodeTrainer(bool debug);
   virtual void message(const std::string &msg);
+private:
+  bool debug = false;
 };
 
 class TrainerClass : public Napi::ObjectWrap<TrainerClass>
