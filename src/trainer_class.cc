@@ -3,9 +3,14 @@
 
 Napi::FunctionReference TrainerClass::constructor;
 
+NodeTrainer::NodeTrainer(bool debug) : CRFSuite::Trainer()
+{
+  this->debug = debug;
+}
+
 void NodeTrainer::message(const std::string &msg)
 {
-  std::cout << msg;
+  if ( this->debug == true ) std::cout << msg;
 }
 
 // TrainerClass::TrainerClass(const Napi::CallbackInfo &info)
@@ -39,7 +44,15 @@ TrainerClass::TrainerClass(const Napi::CallbackInfo &info)
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  this->trainer = new NodeTrainer();
+  bool debug = false;
+  if ( info.Length() == 1 ){
+    Napi::Object options = info[0].As<Napi::Object>();
+    if ( options.Has("debug") ){
+      debug = options.Get("debug").ToBoolean().Value();
+    }
+  }
+
+  this->trainer = new NodeTrainer(debug);
   this->trainer->select("lbfgs", "crf1d");
 }
 
