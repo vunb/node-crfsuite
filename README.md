@@ -36,7 +36,9 @@ console.log('Tags: ', tags)
 ```js
 const path = require('path')
 const crfsuite = require('crfsuite')
-const trainer = new crfsuite.Trainer()
+const trainer = new crfsuite.Trainer({
+  debug: true
+})
 
 let model_filename = path.resolve('./model.crfsuite')
 
