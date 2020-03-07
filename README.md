@@ -83,6 +83,11 @@ npm test
 
 # Change Log
 
+### 2020-03-07: Release version 1.0.1
+
+* Add an options parameter to pass to a Trainer with a debug property to avoid writing logs to stdout. ([17](https://github.com/vunb/node-crfsuite/pull/17)) ([mathquis](https://github.com/mathquis))
+* Update typescript declaration file
+
 ### 2019-07-18: Release version 1.0.0
 
 * Convert all sources to use N-API, remove `nan`
