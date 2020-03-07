@@ -4,7 +4,9 @@ const path = require('path');
 const test = require('tape');
 const crfsuite = require('../..');
 
-const trainer = new crfsuite.Trainer();
+const trainer = new crfsuite.Trainer({
+  debug: false,
+});
 
 
 test('crfsuite trainer', function (t) {
