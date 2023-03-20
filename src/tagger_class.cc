@@ -17,7 +17,9 @@ Napi::Object TaggerClass::Init(Napi::Env env, Napi::Object exports)
                                     {InstanceMethod("open", &TaggerClass::Open),
                                      InstanceMethod("close", &TaggerClass::Close),
                                      InstanceMethod("tag", &TaggerClass::Tag),
-                                     InstanceMethod("get_labels", &TaggerClass::GetLabels)
+                                     InstanceMethod("get_labels", &TaggerClass::GetLabels),
+                                     InstanceMethod("set", &TaggerClass::Set),
+                                     InstanceMethod("marginal", &TaggerClass::Marginal)
 
                                     });
 
@@ -94,6 +96,61 @@ Napi::Value TaggerClass::Tag(const Napi::CallbackInfo &info)
   }
 
   return result;
+}
+
+Napi::Value TaggerClass::Marginal(const Napi::CallbackInfo &info)
+{
+  if (info.Length() < 2)
+  {
+    Napi::TypeError::New(info.Env(), "arguments are missing").ThrowAsJavaScriptException();
+  }
+
+  Napi::String y = info[0].As<Napi::String>();
+  Napi::Number t = info[1].As<Napi::Number>();
+  double result = this->tagger->marginal(y.Utf8Value(), t);
+
+  return Napi::Number::New(info.Env(), result);
+}
+
+Napi::Value TaggerClass::Set(const Napi::CallbackInfo &info)
+{
+  if (info.Length() < 1)
+  {
+    Napi::TypeError::New(info.Env(), "xseq is missing").ThrowAsJavaScriptException();
+  }
+  else if (!info[0].IsArray())
+  {
+    Napi::TypeError::New(info.Env(), "xseq must be an array of arrays").ThrowAsJavaScriptException();
+  }
+
+  Napi::Array xseq = info[0].As<Napi::Array>();
+
+  CRFSuite::ItemSequence items;
+
+  for (size_t i = 0; i < xseq.Length(); ++i)
+  {
+    Napi::Value val = xseq.Get(i);
+    if (!val.IsArray())
+    {
+      Napi::TypeError::New(info.Env(), "xseq must be an array of arrays").ThrowAsJavaScriptException();
+    }
+
+    Napi::Array xxseq = val.As<Napi::Array>();
+
+    CRFSuite::Item item;
+    item.empty();
+
+    for (size_t j = 0; j < xxseq.Length(); ++j)
+    {
+      Napi::String observable = xxseq.Get(j).ToString();
+      item.push_back(CRFSuite::Attribute(observable.Utf8Value()));
+    }
+    items.push_back(item);
+  }
+
+  this->tagger->set(items);
+
+  return Napi::Boolean::New(info.Env(), true);
 }
 
 Napi::Value TaggerClass::GetLabels(const Napi::CallbackInfo &info)

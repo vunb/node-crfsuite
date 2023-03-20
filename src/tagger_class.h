@@ -25,6 +25,8 @@ private:
   Napi::Value Close(const Napi::CallbackInfo &info);
   Napi::Value Tag(const Napi::CallbackInfo &info);
   Napi::Value GetLabels(const Napi::CallbackInfo &info);
+  Napi::Value Set(const Napi::CallbackInfo &info);
+  Napi::Value Marginal(const Napi::CallbackInfo &info);
 
   CRFSuite::Tagger *tagger;
 };
